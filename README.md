@@ -99,6 +99,25 @@ This project follows the MVC (Model-View-Controller) pattern with an additional 
 - **POST** `/:orderId/cancel` - Cancel order and update status history
 - **POST** `/:orderId/duplicate` - Clone an existing order with a new unique ID
 
+### Advanced Search API (Base URL: `/api/v1/orders/search`)
+All search routes require a `q` query parameter and support pagination (`page`, `limit`).
+
+- **GET** `/` - Global search across all fields
+- **GET** `/customer` - Search by Customer Name
+- **GET** `/product` - Search by Product Name
+- **GET** `/category` - Search by Category
+- **GET** `/brand` - Search by Brand
+- **GET** `/status` - Search by Order Status
+- **GET** `/payment` - Search by Payment Method
+- **GET** `/location` - Search across City, State, and Country
+- **GET** `/date` - Search by Order Date (partial matches supported)
+- **GET** `/tracking` - Search by OrderID (Tracking Reference)
+- **GET** `/fuzzy` - Fuzzy search across key fields (matches similar spellings)
+- **GET** `/autocomplete?q=...` - Get up to 10 unique suggestions starting with query
+- **GET** `/highlight` - Search results with matching text wrapped in `<mark>` tags
+- **GET** `/recent` - Get last 10 unique search queries (in-memory)
+- **GET** `/popular` - Get top 10 most frequent search queries (in-memory)
+
 ## Uniform Response Format
 - **Success**: `{ success: true, message: "...", data: [...] }`
 - **Error**: `{ success: false, message: "...", error: "..." }`
