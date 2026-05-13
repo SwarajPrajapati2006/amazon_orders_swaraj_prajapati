@@ -76,9 +76,29 @@ npm start
 - **dotenv** - Environment variable management
 
 ## Project Architecture
-This project follows the MVC (Model-View-Controller) pattern with additional service layer:
-- **Models** - Data structure definitions
-- **Controllers** - Request/response handling
-- **Services** - Business logic and reusable functions
-- **Routes** - API endpoints
-- **Middlewares** - Cross-cutting concerns
+This project follows the MVC (Model-View-Controller) pattern with an additional service layer for a clean, production-ready structure.
+
+## API Documentation (Base URL: `/api/v1/orders`)
+
+### Order Management (CRUD)
+- **GET** `/` - Retrieve all orders (Paginated: `?page=1&limit=10`)
+- **POST** `/` - Create a new order
+- **GET** `/:orderId` - Get a single order by `OrderID`
+- **PUT** `/:orderId` - Full replace of an order
+- **PATCH** `/:orderId` - Partial update of an order
+- **DELETE** `/:orderId` - Permanent deletion of an order
+
+### Specialized Endpoints
+- **GET** `/:orderId/exists` - Check if an order exists (`{ exists: true/false }`)
+- **GET** `/:orderId/summary` - Get brief summary (OrderID, Customer, Product, Amount, Status)
+- **GET** `/:orderId/items` - Get item details only
+- **GET** `/:orderId/history` - Get `statusHistory` array
+- **GET** `/:orderId/invoice` - Get financial and shipping details for invoicing
+- **PATCH** `/:orderId/archive` - Set `isArchived` to `true`
+- **PATCH** `/:orderId/restore` - Set `isArchived` to `false`
+- **POST** `/:orderId/cancel` - Cancel order and update status history
+- **POST** `/:orderId/duplicate` - Clone an existing order with a new unique ID
+
+## Uniform Response Format
+- **Success**: `{ success: true, message: "...", data: [...] }`
+- **Error**: `{ success: false, message: "...", error: "..." }`
