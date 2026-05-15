@@ -118,6 +118,25 @@ All search routes require a `q` query parameter and support pagination (`page`, 
 - **GET** `/recent` - Get last 10 unique search queries (in-memory)
 - **GET** `/popular` - Get top 10 most frequent search queries (in-memory)
 
+### Filtering API (Base URL: `/api/v1/orders/filter`)
+All filter routes support pagination (`page`, `limit`).
+
+- **GET** `/status?type=...` - Filter by Order Status (exact match)
+- **GET** `/payment?method=...` - Filter by Payment Method
+- **GET** `/category?name=...` - Filter by Category
+- **GET** `/brand?name=...` - Filter by Brand
+- **GET** `/price?min=...&max=...` - Filter by TotalAmount range (numeric conversion handled)
+- **GET** `/date?start=...&end=...` - Filter by OrderDate range (YYYY-MM-DD)
+- **GET** `/country?name=...` - Filter by Country
+- **GET** `/state?name=...` - Filter by State
+- **GET** `/city?name=...` - Filter by City
+- **GET** `/high-value?amount=...` - Filter orders where TotalAmount >= amount (default: 1000)
+- **GET** `/discounted` - Filter orders where Discount > 0
+- **GET** `/cancelled` - Filter orders where OrderStatus = "Cancelled"
+- **GET** `/refunded` - Filter orders where OrderStatus = "Refunded"
+- **GET** `/shipped` - Filter orders where OrderStatus = "Shipped"
+- **GET** `/delivered` - Filter orders where OrderStatus = "Delivered"
+
 ## Uniform Response Format
 - **Success**: `{ success: true, message: "...", data: [...] }`
 - **Error**: `{ success: false, message: "...", error: "..." }`
