@@ -5,9 +5,10 @@ class OrderController {
     try {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
-      const result = await orderService.getAllOrders(page, limit);
+      const sort = req.query.sort || null;
+      const result = await orderService.getAllOrders(page, limit, sort);
       res.status(200).json({
-        success: true,
+        success: true, 
         message: "Orders retrieved successfully",
         ...result,
       });
