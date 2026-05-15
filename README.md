@@ -74,6 +74,7 @@ npm start
 - **Mongoose** - MongoDB object modeling
 - **Nodemon** - Development auto-reload
 - **dotenv** - Environment variable management
+- **Axios** - HTTP client (used for API testing)
 
 ## Project Architecture
 This project follows the MVC (Model-View-Controller) pattern with an additional service layer for a clean, production-ready structure.
@@ -136,6 +137,26 @@ All filter routes support pagination (`page`, `limit`).
 - **GET** `/refunded` - Filter orders where OrderStatus = "Refunded"
 - **GET** `/shipped` - Filter orders where OrderStatus = "Shipped"
 - **GET** `/delivered` - Filter orders where OrderStatus = "Delivered"
+
+### Pagination & Listing API (Base URL: `/api/v1/orders`)
+Specialized endpoints for advanced listing and pagination.
+
+- **GET** `/paged?page=1&limit=50` - Paged listing with support for optional query filters (`status`, `category`, `brand`, `country`, `city`, `state`)
+- **GET** `/infinite?page=1` - Infinite scroll format (returns `nextPage` and `hasMore`)
+- **GET** `/recent?page=1&limit=5` - Latest orders sorted by date descending
+- **GET** `/cancelled` - Paginated list of cancelled orders
+- **GET** `/refunded` - Paginated list of refunded orders
+- **GET** `/customer/:customerId` - All orders for a specific customer ID
+- **GET** `/product/:productId` - All orders for a specific product ID
+
+## Testing
+A comprehensive test suite is included to verify all 45+ API routes.
+
+### Run API Tests
+Ensure the server is running on `http://localhost:3000` (or update `BASE_URL` in script), then run:
+```bash
+node test/route-checker.js
+```
 
 ## Uniform Response Format
 - **Success**: `{ success: true, message: "...", data: [...] }`
