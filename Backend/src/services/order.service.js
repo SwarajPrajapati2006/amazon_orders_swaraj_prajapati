@@ -1,12 +1,41 @@
 const Order = require("../models/order.model");
 
 class OrderService {
-  async getAllOrders(page = 1, limit = 10) {
+  getSortConfig(sort) {
+    if (!sort) return { useAggregation: false, sortObj: { OrderDate: -1 } };
+
+    const sortMap = {
+      "amount":   { useAggregation: true,  sortField: "TotalAmountNum", order: 1 },
+      "-amount":  { useAggregation: true,  sortField: "TotalAmountNum", order: -1 },
+      "date":     { useAggregation: false, sortObj: { OrderDate: 1 } },
+      "-date":    { useAggregation: false, sortObj: { OrderDate: -1 } },
+      "status":   { useAggregation: false, sortObj: { OrderStatus: 1 } },
+      "customer": { useAggregation: false, sortObj: { CustomerName: 1 } },
+      "city":     { useAggregation: false, sortObj: { City: 1 } },
+      "payment":  { useAggregation: false, sortObj: { PaymentMethod: 1 } }
+    };
+
+    return sortMap[sort] || { useAggregation: false, sortObj: { OrderDate: -1 } };
+  }
+
+  async getAllOrders(page = 1, limit = 10, sort = null) {
     const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      Order.find().skip(skip).limit(limit).lean(),
-      Order.countDocuments(),
-    ]);
+    const sortConfig = this.getSortConfig(sort);
+
+    let data;
+    if (sortConfig.useAggregation) {
+      data = await Order.aggregate([
+        { $addFields: { [sortConfig.sortField]: { $toDouble: `$${sortConfig.sortField.replace("Num", "")}` } } },
+        { $sort: { [sortConfig.sortField]: sortConfig.order } },
+        { $skip: skip },
+        { $limit: limit },
+        { $project: { [sortConfig.sortField]: 0 } }
+      ]);
+    } else {
+      data = await Order.find().sort(sortConfig.sortObj).skip(skip).limit(limit).lean();
+    }
+
+    const total = await Order.countDocuments();
     const totalPages = Math.ceil(total / limit);
     return { data, page, limit, total, totalPages };
   }

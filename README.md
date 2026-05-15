@@ -149,6 +149,26 @@ Specialized endpoints for advanced listing and pagination.
 - **GET** `/customer/:customerId` - All orders for a specific customer ID
 - **GET** `/product/:productId` - All orders for a specific product ID
 
+### Sorting API (Base URL: `/api/v1/orders/sort`)
+Advanced sorting endpoints with pagination support. Numeric fields use aggregation for accurate sorting.
+
+- **GET** `/highest-value` - Orders sorted by `TotalAmount` descending
+- **GET** `/lowest-value` - Orders sorted by `TotalAmount` ascending
+- **GET** `/latest` - Orders sorted by `OrderDate` descending
+- **GET** `/oldest` - Orders sorted by `OrderDate` ascending
+- **GET** `/most-items` - Orders sorted by `Quantity` descending
+- **GET** `/least-items` - Orders sorted by `Quantity` ascending
+- **GET** `/discount` - Orders sorted by `Discount` descending
+
+### Query Parameter Sorting
+The base endpoint `GET /api/v1/orders` now supports a `sort` query parameter:
+- `?sort=amount` / `-amount` (TotalAmount)
+- `?sort=date` / `-date` (OrderDate)
+- `?sort=status` (OrderStatus)
+- `?sort=customer` (CustomerName)
+- `?sort=city` (City)
+- `?sort=payment` (PaymentMethod)
+
 ## Testing
 A comprehensive test suite is included to verify all 45+ API routes.
 
