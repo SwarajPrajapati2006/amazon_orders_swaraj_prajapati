@@ -48,6 +48,7 @@ temp/
 # Testing
 coverage/
 .nyc_output/
+test/
 
 # Misc
 .env.test
