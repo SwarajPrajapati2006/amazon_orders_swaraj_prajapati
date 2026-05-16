@@ -74,14 +74,13 @@ npm start
 - **Mongoose** - MongoDB object modeling
 - **Nodemon** - Development auto-reload
 - **dotenv** - Environment variable management
-- **Axios** - HTTP client (used for API testing)
 
 ## Project Architecture
 This project follows the MVC (Model-View-Controller) pattern with an additional service layer for a clean, production-ready structure.
 
-## API Documentation (Base URL: `/api/v1/orders`)
+## API Documentation
 
-### Order Management (CRUD)
+### Order Management (Base URL: `/api/v1/orders`)
 - **GET** `/` - Retrieve all orders (Paginated: `?page=1&limit=10`)
 - **POST** `/` - Create a new order
 - **GET** `/:orderId` - Get a single order by `OrderID`
@@ -90,94 +89,26 @@ This project follows the MVC (Model-View-Controller) pattern with an additional 
 - **DELETE** `/:orderId` - Permanent deletion of an order
 
 ### Specialized Endpoints
-- **GET** `/:orderId/exists` - Check if an order exists (`{ exists: true/false }`)
-- **GET** `/:orderId/summary` - Get brief summary (OrderID, Customer, Product, Amount, Status)
-- **GET** `/:orderId/items` - Get item details only
-- **GET** `/:orderId/history` - Get `statusHistory` array
-- **GET** `/:orderId/invoice` - Get financial and shipping details for invoicing
-- **PATCH** `/:orderId/archive` - Set `isArchived` to `true`
-- **PATCH** `/:orderId/restore` - Set `isArchived` to `false`
+- **GET** `/search` - Search orders (e.g., `?q=electronics`)
+- **GET** `/filter` - Filter orders (e.g., `?category=Electronics&status=Delivered`)
+- **GET** `/sort` - Sort orders (e.g., `?sortBy=TotalAmount&order=desc`)
+- **GET** `/:orderId/exists` - Check if an order exists
 - **POST** `/:orderId/cancel` - Cancel order and update status history
-- **POST** `/:orderId/duplicate` - Clone an existing order with a new unique ID
 
-### Advanced Search API (Base URL: `/api/v1/orders/search`)
-All search routes require a `q` query parameter and support pagination (`page`, `limit`).
+### Analytics (Base URL: `/api/v1/analytics`)
+Comprehensive business intelligence metrics using MongoDB aggregation.
+- **GET** `/revenue/total` - Overall revenue metrics
+- **GET** `/revenue/monthly` - Revenue trend by month
+- **GET** `/orders/cancelled` - Cancellation rate and lost revenue
+- **GET** `/products/top-selling` - Best performing products
+- **GET** `/categories/top` - Category-wise revenue performance
+- **GET** `/returns/rate` - Overall return rate analytics
 
-- **GET** `/` - Global search across all fields
-- **GET** `/customer` - Search by Customer Name
-- **GET** `/product` - Search by Product Name
-- **GET** `/category` - Search by Category
-- **GET** `/brand` - Search by Brand
-- **GET** `/status` - Search by Order Status
-- **GET** `/payment` - Search by Payment Method
-- **GET** `/location` - Search across City, State, and Country
-- **GET** `/date` - Search by Order Date (partial matches supported)
-- **GET** `/tracking` - Search by OrderID (Tracking Reference)
-- **GET** `/fuzzy` - Fuzzy search across key fields (matches similar spellings)
-- **GET** `/autocomplete?q=...` - Get up to 10 unique suggestions starting with query
-- **GET** `/highlight` - Search results with matching text wrapped in `<mark>` tags
-- **GET** `/recent` - Get last 10 unique search queries (in-memory)
-- **GET** `/popular` - Get top 10 most frequent search queries (in-memory)
-
-### Filtering API (Base URL: `/api/v1/orders/filter`)
-All filter routes support pagination (`page`, `limit`).
-
-- **GET** `/status?type=...` - Filter by Order Status (exact match)
-- **GET** `/payment?method=...` - Filter by Payment Method
-- **GET** `/category?name=...` - Filter by Category
-- **GET** `/brand?name=...` - Filter by Brand
-- **GET** `/price?min=...&max=...` - Filter by TotalAmount range (numeric conversion handled)
-- **GET** `/date?start=...&end=...` - Filter by OrderDate range (YYYY-MM-DD)
-- **GET** `/country?name=...` - Filter by Country
-- **GET** `/state?name=...` - Filter by State
-- **GET** `/city?name=...` - Filter by City
-- **GET** `/high-value?amount=...` - Filter orders where TotalAmount >= amount (default: 1000)
-- **GET** `/discounted` - Filter orders where Discount > 0
-- **GET** `/cancelled` - Filter orders where OrderStatus = "Cancelled"
-- **GET** `/refunded` - Filter orders where OrderStatus = "Refunded"
-- **GET** `/shipped` - Filter orders where OrderStatus = "Shipped"
-- **GET** `/delivered` - Filter orders where OrderStatus = "Delivered"
-
-### Pagination & Listing API (Base URL: `/api/v1/orders`)
-Specialized endpoints for advanced listing and pagination.
-
-- **GET** `/paged?page=1&limit=50` - Paged listing with support for optional query filters (`status`, `category`, `brand`, `country`, `city`, `state`)
-- **GET** `/infinite?page=1` - Infinite scroll format (returns `nextPage` and `hasMore`)
-- **GET** `/recent?page=1&limit=5` - Latest orders sorted by date descending
-- **GET** `/cancelled` - Paginated list of cancelled orders
-- **GET** `/refunded` - Paginated list of refunded orders
-- **GET** `/customer/:customerId` - All orders for a specific customer ID
-- **GET** `/product/:productId` - All orders for a specific product ID
-
-### Sorting API (Base URL: `/api/v1/orders/sort`)
-Advanced sorting endpoints with pagination support. Numeric fields use aggregation for accurate sorting.
-
-- **GET** `/highest-value` - Orders sorted by `TotalAmount` descending
-- **GET** `/lowest-value` - Orders sorted by `TotalAmount` ascending
-- **GET** `/latest` - Orders sorted by `OrderDate` descending
-- **GET** `/oldest` - Orders sorted by `OrderDate` ascending
-- **GET** `/most-items` - Orders sorted by `Quantity` descending
-- **GET** `/least-items` - Orders sorted by `Quantity` ascending
-- **GET** `/discount` - Orders sorted by `Discount` descending
-
-### Query Parameter Sorting
-The base endpoint `GET /api/v1/orders` now supports a `sort` query parameter:
-- `?sort=amount` / `-amount` (TotalAmount)
-- `?sort=date` / `-date` (OrderDate)
-- `?sort=status` (OrderStatus)
-- `?sort=customer` (CustomerName)
-- `?sort=city` (City)
-- `?sort=payment` (PaymentMethod)
-
-## Testing
-A comprehensive test suite is included to verify all 45+ API routes.
-
-### Run API Tests
-Ensure the server is running on `http://localhost:3000` (or update `BASE_URL` in script), then run:
-```bash
-node test/route-checker.js
-```
-
-## Uniform Response Format
-- **Success**: `{ success: true, message: "...", data: [...] }`
-- **Error**: `{ success: false, message: "...", error: "..." }`
+### Statistics (Base URL: `/api/v1/stats`)
+Real-time statistical breakdown and system health.
+- **GET** `/orders/total` - Order count by status and percentages
+- **GET** `/orders/daily` - Daily order volume with date filtering
+- **GET** `/revenue/total` - Detailed revenue, tax, and discount breakdown
+- **GET** `/revenue/monthly` - Monthly revenue with growth trend (MoM %)
+- **GET** `/customers/count` - Unique customers, new vs repeat metrics
+- **GET** `/system/performance` - Server uptime, memory usage, and DB status
