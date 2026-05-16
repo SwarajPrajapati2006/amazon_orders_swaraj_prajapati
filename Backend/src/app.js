@@ -5,6 +5,7 @@ const searchRoutes = require("./routes/search.routes");
 const filterRoutes = require("./routes/filter.routes");
 const paginationRoutes = require("./routes/pagination.routes");
 const sortRoutes = require("./routes/sort.routes");
+const analyticsRoutes = require("./routes/analytics.routes");
 
 app.use(express.json())
 
@@ -13,5 +14,6 @@ app.use("/api/v1/orders/filter", filterRoutes);
 app.use("/api/v1/orders/sort", sortRoutes);
 app.use("/api/v1/orders", paginationRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
 
 module.exports = app;
