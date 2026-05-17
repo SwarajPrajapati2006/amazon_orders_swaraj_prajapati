@@ -112,3 +112,16 @@ Real-time statistical breakdown and system health.
 - **GET** `/revenue/monthly` - Monthly revenue with growth trend (MoM %)
 - **GET** `/customers/count` - Unique customers, new vs repeat metrics
 - **GET** `/system/performance` - Server uptime, memory usage, and DB status
+
+### Shipping & Delivery (Base URL: `/api/v1/shipping`)
+Logistics and tracking management.
+- **GET** `/tracking/:orderId` - Track shipment with carrier and ETA
+- **PATCH** `/update-status/:orderId` - Update delivery status and history
+- **GET** `/pending` - List all pending shipments (Paginated)
+- **GET** `/delivered` - List all delivered shipments (Paginated)
+- **POST** `/create-label` - Generate shipping label data
+- **GET** `/estimate/:orderId` - Detailed delivery date estimation
+- **GET** `/carriers` - List supported shipping carriers
+- **PATCH** `/change-address/:orderId` - Update shipping destination
+- **POST** `/reschedule/:orderId` - Reschedule delivery date
+

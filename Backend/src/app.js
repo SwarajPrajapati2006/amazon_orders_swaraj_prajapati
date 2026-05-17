@@ -7,6 +7,7 @@ const paginationRoutes = require("./routes/pagination.routes");
 const sortRoutes = require("./routes/sort.routes");
 const analyticsRoutes = require("./routes/analytics.routes");
 const statsRoutes = require("./routes/stats.routes");
+const shippingRoutes = require("./routes/shipping.routes");
 
 app.use(express.json())
 
@@ -17,5 +18,6 @@ app.use("/api/v1/orders", paginationRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/stats", statsRoutes);
+app.use("/api/v1/shipping", shippingRoutes);
 
 module.exports = app;
